@@ -13,3 +13,15 @@ def start_creating_pet():
 
 def cancel_creating_pet():
     session["creating"] = False
+
+def assign_pet_id(id):
+    session["pet_id"] = id
+
+def creating_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get("creating"):
+            return redirect("/")
+        return f(*args, **kwargs)
+
+    return decorated_function

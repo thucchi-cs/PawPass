@@ -5,8 +5,16 @@
     {{fields}}
     {{stage}}
 
-    {% for field in fields %}
-        <p>{{field}}</p>
-        <input name={{field}} placeholder={{field}} type="text">
-    {% endfor %}
+    <form action="/cancel_creation" method="post">
+        <button>Cancel</button>
+    </form>
+    <form action={{"/create-pet-" ~ stage}} method="post">
+        {% for raw,display in fields.items() %}
+            {% if raw != "id" %}
+                <p>{{display}}</p>
+                <input name={{raw}} type={% if display == "Password" %}"password"{% else %}"text"{% endif %}>
+            {% endif %}
+        {% endfor %}
+        <button type="submit">Next</button>
+    </form>
 {% endblock %}

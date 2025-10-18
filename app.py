@@ -32,10 +32,25 @@ def index():
     print(data)
     return render_template("index.html")
 
-@app.route("/create-pet", methods=["POST", "GET"])
-def create_pet():
+@app.route("/create-pet-1", methods=["POST", "GET"])
+def create_pet1():
     if request.method == "POST":
-        pass
-    fields = db.rpc("get_table_columns", {"tname": "pets"}).execute().data
-    fields = [i["column_name"] for i in fields]
+        start_creating_pet()
+        return redirect("create-pet-2")
+    fields = db.table("pets").select("*").eq("id", 1).execute().data[0]
+    print(fields)
     return render_template("create_pet.html", stage=1,fields=fields)
+
+@app.route("/create-pet-2", methods=["POST", "GET"])
+@creating_required
+def create_pet2():
+    if request.method == "POST":
+        cancel_creating_pet()
+        return redirect("/")
+    fields = db.table("additional_info").select("*").eq("pet_id",1).execute().data[0]
+    return render_template("create_pet.html", stage=2,fields=fields)
+
+@app.route("/cancel_creation", methods=["POST"])
+def cancel():
+    cancel_creating_pet()
+    return redirect("/")
