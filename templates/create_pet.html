@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    hello
+    {{fields}}
+    {{stage}}
+
+    {% for field in fields %}
+        <p>{{field}}</p>
+        <input name={{field}} placeholder={{field}} type="text">
+    {% endfor %}
+{% endblock %}

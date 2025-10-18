@@ -28,4 +28,14 @@ db: Client = create_client(db_url, db_key)
 # Website homepage
 @app.route("/")
 def index():
+    data = db.table("test").select("*").execute().data
+    print(data)
     return render_template("index.html")
+
+@app.route("/create-pet", methods=["POST", "GET"])
+def create_pet():
+    if request.method == "POST":
+        pass
+    fields = db.rpc("get_table_columns", {"tname": "pets"}).execute().data
+    fields = [i["column_name"] for i in fields]
+    return render_template("create_pet.html", stage=1,fields=fields)
