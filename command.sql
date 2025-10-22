@@ -1,10 +1,7 @@
-CREATE FUNCTION get_table_columns(tname text, sname text DEFAULT 'public')
-RETURNS TABLE (column_name text) AS $$
-BEGIN
-    RETURN QUERY EXECUTE format('
-        SELECT column_name::text
-        FROM information_schema.columns
-        WHERE table_schema = %L AND table_name = %L;
-    ', sname, tname);
-END;
-$$ LANGUAGE plpgsql;
+INSERT INTO info_categories (category, req) 
+    VALUES ('Additional Information', TRUE);
+
+INSERT INTO info_categories (category, descr, req) 
+    VALUES ('Password', 'you will need your password when you edit information for this pet', TRUE);
+
+SELECT * FROM info_categories;

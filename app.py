@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, request, flash, session, jsonify
 from supabase import create_client, Client
+from werkzeug.security import generate_password_hash
 from helpers import *
 import os
 import dotenv
@@ -28,29 +29,34 @@ db: Client = create_client(db_url, db_key)
 # Website homepage
 @app.route("/")
 def index():
-    data = db.table("test").select("*").execute().data
-    print(data)
     return render_template("index.html")
 
-@app.route("/create-pet-1", methods=["POST", "GET"])
+@app.route("/create-pet", methods=["POST", "GET"])
 def create_pet1():
-    if request.method == "POST":
-        start_creating_pet()
-        return redirect("create-pet-2")
-    fields = db.table("pets").select("*").eq("id", 1).execute().data[0]
-    print(fields)
-    return render_template("create_pet.html", stage=1,fields=fields)
+    # Query all categories of info
+    fields = db.table("info_categories").select("*").order("id").execute().data
 
-@app.route("/create-pet-2", methods=["POST", "GET"])
-@creating_required
-def create_pet2():
+    # If POST
     if request.method == "POST":
-        cancel_creating_pet()
+        # Hash user password
+        pwd = request.form.get(str(find_cat_id("Password", fields)))
+        hashed_pwd = generate_password_hash(pwd)
+
+        # Insert pet into data, get pet id
+        db.table("pets").insert({"pwd": hashed_pwd}).execute()
+        pet_id = db.table("pets").select("id").order("id", desc=True).limit(1).execute().data[0]
+        
+        # Join all info into list of dicts
+        data = []
+        for cat,val in request.form.items():
+            if (cat != str(find_cat_id("Password", fields))) and (val != ""):
+                data.append({"pet_id": pet_id.get("id"), "cat_id": cat, "info": val})
+        
+        # Add info to database
+        db.table("information").insert(data).execute()
+
+        # Return to homepage
         return redirect("/")
-    fields = db.table("additional_info").select("*").eq("pet_id",1).execute().data[0]
-    return render_template("create_pet.html", stage=2,fields=fields)
-
-@app.route("/cancel_creation", methods=["POST"])
-def cancel():
-    cancel_creating_pet()
-    return redirect("/")
+    
+    # Go to page
+    return render_template("create_pet.html", fields=fields)

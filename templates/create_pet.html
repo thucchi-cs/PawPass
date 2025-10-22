@@ -5,15 +5,19 @@
     {{fields}}
     {{stage}}
 
-    <form action="/cancel_creation" method="post">
+    <form action="/" method="get">
         <button>Cancel</button>
     </form>
-    <form action={{"/create-pet-" ~ stage}} method="post">
-        {% for raw,display in fields.items() %}
-            {% if raw != "id" %}
-                <p>{{display}}</p>
-                <input name={{raw}} type={% if display == "Password" %}"password"{% else %}"text"{% endif %}>
+    <form action="/create-pet" method="post">
+        {% for f in fields %}
+
+            <p>{{f['category']}} {% if f['req'] %}*{% endif %}</p>
+            {{f['id']}}
+            {% if f['descr'] %}
+                <p>{{f['descr']}}</p>
             {% endif %}
+            <input name={{f['id']}} type={% if f['category'] == "Password" %}"password"{%else%}"text"{%endif%}>
+
         {% endfor %}
         <button type="submit">Next</button>
     </form>
