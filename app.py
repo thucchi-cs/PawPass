@@ -13,6 +13,10 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 # flask run --debug
 
+# Set up jinja filters
+app.jinja_env.filters["str"] = str
+app.jinja_env.filters["int"] = int
+
 # Set up web app
 app.config.update(
     SECRET_KEY=os.environ.get("FLASK_SECRET_KEY"),
@@ -39,19 +43,22 @@ def clear():
 # Display pet info
 @app.route("/pet", methods=["GET"])
 def display():
+    # Save categories if not yet
     if not session.get("fields"):
-        print("HEYY")
         categories = db.table("info_categories").select("*").order("id").execute().data
         save_categories(categories)
+
+    # Get data of pet to display
     pet_id = request.args.get("id")
     data = db.table("information").select("*").eq("pet_id", int(pet_id)).order("cat_id").execute().data
-    return render_template("pet.html", id=pet_id, data=data)
+    
+    # Go to display page
+    return render_template("pet.html", id=pet_id, data=data, fields=session["fields"])
 
 @app.route("/create-pet", methods=["POST", "GET"])
 def create_pet():
     # Save categories if not yet
     if not session.get("fields"):
-        print("HEYY")
         categories = db.table("info_categories").select("*").order("id").execute().data
         save_categories(categories)
 
