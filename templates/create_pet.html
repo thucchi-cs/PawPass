@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    hello
+    {{fields}}
+    {{stage}}
+
+    <form action="/" method="get">
+        <button>Cancel</button>
+    </form>
+    <form action="/create-pet" method="post">
+        {% for id,value in fields.items() %}
+
+            <p>{{value["name"]}} {% if value['req'] %}*{% endif %}</p>
+            {{id}}
+            {% if value['descr'] %}
+                <p>{{value['descr']}}</p>
+            {% endif %}
+            <input name={{id}} type={% if value["name"] == "Password" %}"password"{%else%}"text"{%endif%}>
+
+        {% endfor %}
+        <button type="submit">Next</button>
+    </form>
+{% endblock %}
