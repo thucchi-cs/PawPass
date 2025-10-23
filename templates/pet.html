@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    pet display
+    {{id}}
+    {% for d in data %}
+        {{d}}
+        <br>
+    {% endfor %}
+{% endblock %}
