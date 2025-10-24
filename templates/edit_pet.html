@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    sup
+    {{stage}}
+    {% if stage == 1 %}
+
+        <form action="/edit-pet" method="post">
+            ID
+            <input type="text" name="id" autocomplete="off" autofocus>
+            Password
+            <input type="password" name="password" autocomplete="off">
+            <button>Next</button>
+        </form>
+
+    {% else %}
+        {{id}}
+        {{info}}
+
+        <form action={{ "/edit-pet?id=" ~ id }} method="post">
+            {% for id,value in fields.items() %}
+                
+                {% if value["name"] != "Password" %}
+                    <p>{{value["name"]}} {% if value['req'] %}*{% endif %}</p>
+                    {{id}}
+                    {% if value['descr'] %}
+                        <p>{{value['descr']}}</p>
+                    {% endif %}
+                    <input name={{id}} {% if info[id] %} value="{{info[id]}}" {%endif%}>
+                {% endif %}
+
+            {% endfor %}
+            <button>Save</button>
+        </form>
+
+    {% endif %}
+{% endblock %}
