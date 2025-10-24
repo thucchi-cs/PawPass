@@ -110,10 +110,16 @@ def edit_pet():
             db.table("information").insert(data).execute()         
 
             print("post 2")
-            return redirect("/")
+            return redirect("/create-qr")
 
         # Get pet data
         data = db.table("information").select("*").eq("pet_id", int(arg_id)).execute().data
+
+        # Save pet id to cookies to create qr
+        session["pet_id"] = int(arg_id)
+
+        # TODO 2: Call func that creates qr code
+        create_qr()
 
         # Create readable dict of data
         info = {}
@@ -168,4 +174,4 @@ def create_pet():
 # TODO 4: Create a route (return render_template()) to the page that displays qr code (route to qr_display.html in todo 3)
 @app.route("/create-qr", methods=["GET"])
 def redirect_qr():
-    return render_template("qr_display.html",fields=session["fields"])
+    return render_template("qr_display.html")
