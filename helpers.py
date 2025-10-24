@@ -4,6 +4,7 @@ from functools import wraps
 import qrcode
 from qrcode.constants import ERROR_CORRECT_H
 import os
+from io import BytesIO
 
 
 def secret_key():
@@ -28,48 +29,49 @@ def save_categories(categories):
     session["fields"] = fields
 
 # TODO 1: Create the qr code to url
+def _build_pet_url(pet_id: int) -> str:
+    """Return an absolute or relative URL to the pet page for given id."""
+    try:
+        # request.host_url includes trailing '/'
+        return request.host_url + f"pet?id={pet_id}"
+    except RuntimeError:
+        return f"/pet?id={pet_id}"
+
+
+def generate_qr_bytes(pet_id: int) -> BytesIO:
+    """Generate a PNG QR image for the pet URL and return a BytesIO buffer.
+
+    This avoids writing to disk so it works on read-only filesystems.
+    """
+    pet_url = _build_pet_url(pet_id)
+
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=ERROR_CORRECT_H,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(pet_url)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="darkblue", back_color="lightblue")
+
+    buf = BytesIO()
+    # Pillow-compatible save
+    img.save(buf, format="PNG")
+    buf.seek(0)
+    return buf
+
+
 def create_qr():
-    # Url to .../pet?id=...
-    # id is saved in session["pet_id"]
+    """Legacy helper kept for compatibility.
+
+    If called after storing `session['pet_id']`, it will ensure QR can be
+    generated on-demand. It does not write to disk.
+    """
     pet_id = session.get("pet_id")
     if not pet_id:
         return None
-
-    # Build absolute URL to pet display page (host_url includes trailing slash)
-    try:
-        pet_url = request.host_url + f"pet?id={pet_id}"
-    except RuntimeError:
-        # If request context unavailable, fall back to relative URL
-        pet_url = f"/pet?id={pet_id}"
-
-    qr = qrcode.QRCode(
-        version=1,  # Controls the size of the QR code (1-40)
-        error_correction=ERROR_CORRECT_H, # Error correction level (L, M, Q, H)
-        box_size=10,  # Number of pixels per "box" of the QR code
-        border=4,  # Thickness of the border around the QR code
-    )
-
-    # Add data to the QR code and render image
-    qr.add_data(pet_url)
-    qr.make(fit=True) # Adjusts the size of the QR code to fit the data
-
-    # Create the image with custom colors
-    img = qr.make_image(fill_color="darkblue", back_color="lightblue")
-
-    # Ensure static directory exists and save the QR image there
-    filename = f"qr_{pet_id}.png"
-    static_dir = os.path.join(os.getcwd(), "static")
-    if not os.path.isdir(static_dir):
-        try:
-            os.makedirs(static_dir, exist_ok=True)
-        except Exception:
-            # fallback to current directory if unable to create
-            static_dir = os.getcwd()
-
-    out_path = os.path.join(static_dir, filename)
-    img.save(out_path)
-
-    # Store filename in session so template can access it
-    session["qr_filename"] = filename
-    return filename
+    # Return BytesIO but don't persist it to session (session size limits)
+    return generate_qr_bytes(pet_id)
     

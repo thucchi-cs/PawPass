@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, flash, session, jsonify
+from flask import Flask, render_template, redirect, request, flash, session, jsonify, send_file
 from supabase import create_client, Client
 from werkzeug.security import generate_password_hash, check_password_hash
 from helpers import *
@@ -169,3 +169,23 @@ def create_pet():
 @app.route("/create-qr", methods=["GET"])
 def redirect_qr():
     return render_template("qr_display.html",fields=session["fields"])
+
+
+# Serve QR image from memory without writing to disk. Uses session['pet_id']
+@app.route('/qr_image', methods=['GET'])
+def qr_image():
+    pet_id = session.get('pet_id') or request.args.get('id')
+    if not pet_id:
+        return ("No pet id", 404)
+
+    # pet_id might be string; ensure int when generating
+    try:
+        pid = int(pet_id)
+    except Exception:
+        return ("Invalid pet id", 400)
+
+    # Import helper function here to avoid circular imports on module load
+    from helpers import generate_qr_bytes
+
+    buf = generate_qr_bytes(pid)
+    return send_file(buf, mimetype='image/png', as_attachment=False, download_name=f'qr_{pid}.png')

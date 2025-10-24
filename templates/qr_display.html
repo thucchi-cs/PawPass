@@ -5,13 +5,13 @@
 
     <h2>Your Pet QR Code</h2>
 
-    {% if session.qr_filename %}
+    {% if session.pet_id %}
         <p>Scan the QR code to view your pet's page, or download it below.</p>
         <div>
-            <img src="{{ url_for('static', filename=session.qr_filename) }}" alt="Pet QR code" style="max-width:300px; height:auto;" />
+            <img src="{{ url_for('qr_image') }}" alt="Pet QR code" style="max-width:300px; height:auto;" />
         </div>
         <p>
-            <a class="button" href="{{ url_for('static', filename=session.qr_filename) }}" download>Download PNG</a>
+            <a class="button" href="{{ url_for('qr_image') }}" download="qr_{{ session.pet_id }}.png">Download PNG</a>
             <a class="button" href="/">Done</a>
         </p>
     {% else %}
