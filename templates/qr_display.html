@@ -2,6 +2,21 @@
 
 {% block body %}
 
-    <!-- TODO 3: create this page that displays downloadable qr code -->
+
+    <h2>Your Pet QR Code</h2>
+
+    {% if session.qr_filename %}
+        <p>Scan the QR code to view your pet's page, or download it below.</p>
+        <div>
+            <img src="{{ url_for('static', filename=session.qr_filename) }}" alt="Pet QR code" style="max-width:300px; height:auto;" />
+        </div>
+        <p>
+            <a class="button" href="{{ url_for('static', filename=session.qr_filename) }}" download>Download PNG</a>
+            <a class="button" href="/">Done</a>
+        </p>
+    {% else %}
+        <p>No QR code found. Please create a pet first.</p>
+        <a class="button" href="/create-pet">Create Pet</a>
+    {% endif %}
 
 {% endblock %}

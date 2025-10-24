@@ -160,9 +160,12 @@ def create_pet():
         create_qr()
 
         # TODO 5: Redirect to page that displays qr code with option to download as png (redirect to route in todo 4)
-        return redirect("/")
+        return redirect("/create-qr")
     
     # Go to page
     return render_template("create_pet.html", fields=session["fields"])
 
 # TODO 4: Create a route (return render_template()) to the page that displays qr code (route to qr_display.html in todo 3)
+@app.route("/create-qr", methods=["GET"])
+def redirect_qr():
+    return render_template("qr_display.html",fields=session["fields"])
