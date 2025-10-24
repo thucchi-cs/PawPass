@@ -110,10 +110,16 @@ def edit_pet():
             db.table("information").insert(data).execute()         
 
             print("post 2")
-            return redirect("/")
+            return redirect("/create-qr")
 
         # Get pet data
         data = db.table("information").select("*").eq("pet_id", int(arg_id)).execute().data
+
+        # Save pet id to cookies to create qr
+        session["pet_id"] = int(arg_id)
+
+        # TODO 2: Call func that creates qr code
+        create_qr()
 
         # Create readable dict of data
         info = {}
