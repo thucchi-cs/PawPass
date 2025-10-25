@@ -52,7 +52,7 @@ def display():
     # Get data of pet to display
     pet_id = request.args.get("id")
     data = db.table("information").select("*").eq("pet_id", int(pet_id)).order("cat_id").execute().data
-    
+    print(session["fields"])
     # Go to display page
     return render_template("pet.html", id=pet_id, data=data, fields=session["fields"])
 
@@ -118,7 +118,7 @@ def edit_pet():
         # Save pet id to cookies to create qr
         session["pet_id"] = int(arg_id)
 
-        # TODO 2: Call func that creates qr code
+        # Create qr code of pet
         create_qr()
 
         # Create readable dict of data
@@ -162,24 +162,25 @@ def create_pet():
         # Save pet id to cookies to create qr
         session["pet_id"] = pet_id.get("id")
 
-        # TODO 2: Call func that creates qr code
+        # Create qr code for pet
         create_qr()
 
-        # TODO 5: Redirect to page that displays qr code with option to download as png (redirect to route in todo 4)
+        # Redirect to qr code display page
         return redirect("/create-qr")
     
     # Go to page
     return render_template("create_pet.html", fields=session["fields"])
 
-# TODO 4: Create a route (return render_template()) to the page that displays qr code (route to qr_display.html in todo 3)
+# Display QR code
 @app.route("/create-qr", methods=["GET"])
 def redirect_qr():
-    return render_template("qr_display.html",fields=session["fields"])
+    return render_template("qr_display.html")
 
 
-# Serve QR image from memory without writing to disk. Uses session['pet_id']
+# Send qr code image data
 @app.route('/qr_image', methods=['GET'])
 def qr_image():
+    # Get id of pet
     pet_id = session.get('pet_id') or request.args.get('id')
     if not pet_id:
         return ("No pet id", 404)
@@ -193,5 +194,6 @@ def qr_image():
     # Import helper function here to avoid circular imports on module load
     from helpers import generate_qr_bytes
 
+    # Send image data
     buf = generate_qr_bytes(pid)
-    return send_file(buf, mimetype='image/png', as_attachment=False, download_name=f'qr_{pid}.png')
+    return send_file(buf, mimetype='image/png', as_attachment=False, download_name=f'qr_pet_{pid}.png')

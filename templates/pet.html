@@ -4,7 +4,7 @@
     pet display
     {{id}}
     {% for d in data %}
-        <h3>{{fields[ d['cat_id'] | str ]["name"]}}</h3>
+        <h3>{{fields[d['cat_id']|str]["name"]}}</h3>
         {{d["info"]}}
         <br>
     {% endfor %}
