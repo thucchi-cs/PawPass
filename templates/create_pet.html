@@ -8,7 +8,7 @@
     <form action="/" method="get">
         <button>Cancel</button>
     </form>
-    <form action="/create-pet" method="post">
+    <form action="/create-pet" method="post" id="addPet">
         {% for id,value in fields.items() %}
 
             <p>{{value["name"]}} {% if value['req'] %}*{% endif %}</p>
@@ -16,9 +16,9 @@
             {% if value['descr'] %}
                 <p>{{value['descr']}}</p>
             {% endif %}
-            <input name={{id}} type={% if value["name"] == "Password" %}"password"{%else%}"text"{%endif%}>
+            <input name={{id}} type={% if value["name"] == "Password" %}"password"{%else%}"text"{%endif%} id={{"id" ~ id |str}}>
 
         {% endfor %}
-        <button type="submit">Next</button>
+        <button type="button" id="btn">Next</button>
     </form>
 {% endblock %}

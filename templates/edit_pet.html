@@ -17,7 +17,7 @@
         {{id}}
         {{info}}
 
-        <form action={{ "/edit-pet?id=" ~ id }} method="post">
+        <form action={{ "/edit-pet?id=" ~ id }} method="post" id="addPet">
             {% for id,value in fields.items() %}
                 
                 {% if value["name"] != "Password" %}
@@ -26,11 +26,11 @@
                     {% if value['descr'] %}
                         <p>{{value['descr']}}</p>
                     {% endif %}
-                    <input name={{id}} {% if info[id] %} value="{{info[id]}}" {%endif%}>
+                    <input name={{id}} {% if info[id] %} value="{{info[id]}}" {%endif%} id="{{id}}">
                 {% endif %}
 
             {% endfor %}
-            <button>Save</button>
+            <button id="btn" type="button">Save</button>
         </form>
 
     {% endif %}
