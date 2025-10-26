@@ -1,12 +1,22 @@
 {% extends "layout.html" %}
 
 {% block body %}
-    hello
-    <form action="/create-pet" method="get">
-        <button>CREATE PET</button>
-    </form>
+    <div class="flex flex-col items-center justify-center min-h-screen">
+        <h1 class="text-6xl font-bold mb-5 text-primary">PawPass</h1>
+        
+        <p class="text-lg text-gray-600 mb-5 max-w-md text-center">
+            Easily create, organize, and update your pet's information — all in one place.
+        </p>
 
-    <form action="/edit-pet" method="get">
-        <button>EDIT PET</button>
-    </form>
+        <div class="flex flex-col md:flex-row gap-4 md:gap-6">
+            <form action="/create-pet" method="get">
+                <button class="bg-primary text-white w-[70vw] h-[12vh] md:w-[13vw] md:h-[10vh] rounded-[15px] text-lg font-medium hover:bg-accent transition">CREATE PET</button>
+            </form>
+        
+            <form action="/edit-pet" method="get">
+                <button class="bg-primary text-white w-[70vw] h-[12vh] md:w-[13vw] md:h-[10vh] rounded-[15px] text-lg font-medium hover:bg-accent transition">EDIT PET</button>
+            </form>
+        </div>
+
+    </div>
 {% endblock %}
