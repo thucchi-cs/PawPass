@@ -18,6 +18,10 @@ def find_cat_id(cat):
             return id
     return -1
 
+# Capitalize a word
+def cap(s):
+    return s.capitalize()
+
 # Save the categories in session
 def save_categories(categories):
     fields = {}

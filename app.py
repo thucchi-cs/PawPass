@@ -16,6 +16,7 @@ app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 # Set up jinja filters
 app.jinja_env.filters["str"] = str
 app.jinja_env.filters["int"] = int
+app.jinja_env.filters["cap"] = cap
 
 # Set up web app
 app.config.update(
