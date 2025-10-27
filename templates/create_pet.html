@@ -1,24 +1,43 @@
 {% extends "layout.html" %}
 
 {% block body %}
-    hello
-    {{fields}}
-    {{stage}}
+    <div class="flex flex-col py-[7vh] px-[10vw] md:px-12 bg-white border-2 border-gray-300">
+        <!-- Title -->
+        <h1 class="text-6xl font-bold text-primary mb-6 text-center">Create Pet</h1>
 
-    <form action="/" method="get">
-        <button>Cancel</button>
-    </form>
-    <form action="/create-pet" method="post" id="addPet">
-        {% for id,value in fields.items() %}
+        <!-- Horizontal line -->
+        <hr class="border-gray-300 w-48 mb-4 mx-auto border-2">
 
-            <p>{{value["name"]}} {% if value['req'] %}*{% endif %}</p>
-            {{id}}
-            {% if value['descr'] %}
-                <p>{{value['descr']}}</p>
-            {% endif %}
-            <input name={{id}} type={% if value["name"] == "Password" %}"password"{%else%}"text"{%endif%} id={{"id" ~ id |str}}>
+        <p class="text-center text-gray-500 italic">* indicates a required field</p>
+        
+        <!-- Cancel button -->
+        <form action="/" method="get" class="w-full max-w-lg mt-6">
+            <button class="text-gray-600 hover:text-gray-800 font-medium">&lt Cancel</button>
+        </form>
 
-        {% endfor %}
-        <button type="button" id="btn">Next</button>
-    </form>
+
+        <!-- Form fields container -->
+        <form action="/create-pet" method="post" id="addPet" class="w-full md:w-[50vw] max-w-lg flex flex-col gap-6">
+            {% for id,value in fields.items() %}
+                <div class="flex flex-col mt-[5vh]">
+                    <label class="font-semibold mb-1 text-lg">{{value["name"]}} {% if value['req'] %}*{% endif %}</label>
+                    {% if value['descr'] %}
+                        <span class="text-gray-500 italic text-sm mb-1">{{value['descr']}}</span>
+                    {% endif %}
+                    <input autocomplete="off" name={{id}} id={{"id" ~ id |str}} type={% if value["name"] == "Password" %}"password"{%else%}"text"{%endif%} class="border-b border-gray-300 focus:border-primary focus:outline-none py-1">
+                </div>
+
+            {% endfor %}
+
+            <!-- Create button aligned right -->
+            <div class="flex justify-end mt-4">
+                <button type="button" id="btn"
+                        class="bg-primary text-white px-6 py-2 rounded-custom font-medium hover:bg-accent transition">
+                    Create
+                </button>
+            </div>
+
+        </form>
+    </div>
+
 {% endblock %}

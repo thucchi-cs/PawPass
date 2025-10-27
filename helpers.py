@@ -18,11 +18,15 @@ def find_cat_id(cat):
             return id
     return -1
 
+# Capitalize a word
+def cap(s):
+    return s.capitalize()
+
 # Save the categories in session
 def save_categories(categories):
     fields = {}
     for c in categories:
-        fields[str(c["id"])] = {"name": c["category"], "req": c["req"], "descr": c["descr"]}
+        fields[int(c["id"])] = {"name": c["category"], "req": c["req"], "descr": c["descr"]}
     session["fields"] = fields
 
 # Get url to pet display
@@ -39,6 +43,7 @@ def _build_pet_url(pet_id):
 def generate_qr_bytes(pet_id):
     # Get url qr code is directed to
     pet_url = _build_pet_url(pet_id)
+    session["pet_link"] = pet_url
 
     # Create the qr code image
     qr = qrcode.QRCode(
@@ -49,7 +54,7 @@ def generate_qr_bytes(pet_id):
     )
     qr.add_data(pet_url)
     qr.make(fit=True)
-    img = qr.make_image(fill_color="darkblue", back_color="lightblue")
+    img = qr.make_image(fill_color="#2563eb")
 
     # Save qr code to buffer
     buf = BytesIO()
@@ -67,3 +72,13 @@ def create_qr():
     # Return BytesIO of qr code
     return generate_qr_bytes(pet_id)
     
+# Check if currently logged in
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get("logged_in"):
+            print(session.get("logged_in"), "user")
+            return redirect("/")
+        return f(*args, **kwargs)
+
+    return decorated_function

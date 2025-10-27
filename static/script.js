@@ -1,3 +1,14 @@
+tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2563eb', // elegant blue
+            accent: '#1e40af'
+          }
+        }
+      }
+    }
+
 function flashMsg(msg) {
     let flash = document.querySelector("#flash-msg")
     flash.hidden = false;
@@ -8,7 +19,7 @@ document.querySelector(".btn-close").addEventListener("click", () => {
     document.querySelector("#flash-msg").hidden = true;
 })
 
-if ((window.location.pathname == "/create-pet") || (window.location.pathname == "/edit-pet")){
+if ((window.location.pathname == "/create-pet") || ((window.location.pathname == "/edit-pet") && (window.location.search))){
     // Get form to check validation
     let addPet = document.querySelector("#addPet")
     addPet.querySelector("#btn").addEventListener("click", function() {
@@ -19,21 +30,13 @@ if ((window.location.pathname == "/create-pet") || (window.location.pathname == 
         let OwnerName = addPet.querySelector("#id7").value;
         let OwnerContact = addPet.querySelector("#id8").value;
         let petAge = addPet.querySelector("#id4").value;
-        let password = addPet.querySelector("#id11").value;
-
-
-
-
+        let password = addPet.querySelector("#id11");
+        password = password ? password.value : "password!";
 
         // Flash error if not all fields are filled out
         if (!petName || !petType || !favoriteFood || !OwnerName || !OwnerContact || !password) {
             flashMsg("All required fields must be filled out!");
             console.log(petName + petType + favoriteFood + OwnerName + OwnerContact + password)
-            return;
-        }
-    
-        if (petAge != null && /^\d+$/.test(petAge) == false){
-            flashMsg("Your pet age is not a valid number")
             return;
         }
     
@@ -47,4 +50,4 @@ if ((window.location.pathname == "/create-pet") || (window.location.pathname == 
 
         // Submit form if all inputs are valid
         addPet.submit()
-    })}
+})}

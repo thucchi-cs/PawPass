@@ -16,6 +16,7 @@ app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 # Set up jinja filters
 app.jinja_env.filters["str"] = str
 app.jinja_env.filters["int"] = int
+app.jinja_env.filters["cap"] = cap
 
 # Set up web app
 app.config.update(
@@ -86,6 +87,8 @@ def edit_pet():
             if not check_password_hash(pet["pwd"], pwd):
                 flash("Incorrect password")
                 return redirect("/edit-pet")
+            
+            session["logged_in"] = True
 
             return redirect(f"/edit-pet?id={id}")
 
@@ -95,42 +98,44 @@ def edit_pet():
     
     # 2nd page
     else:
-        # If submit
-        if request.method == "POST":
-            # Delete all existing data of pet
-            db.table("information").delete().eq("pet_id", int(arg_id)).execute()
+        if session.get("logged_in"):
+            # If submit
+            if request.method == "POST":
+                # Delete all existing data of pet
+                db.table("information").delete().eq("pet_id", int(arg_id)).execute()
 
-            # Join all info into list of dicts
-            data = []
-            for cat,val in request.form.items():
-                if (val != ""):
-                    data.append({"pet_id": int(arg_id), "cat_id": cat, "info": val})   
+                # Join all info into list of dicts
+                data = []
+                for cat,val in request.form.items():
+                    if (val != ""):
+                        data.append({"pet_id": int(arg_id), "cat_id": cat, "info": val})   
 
-            # Add new data to db
-            db.table("information").insert(data).execute()         
+                # Add new data to db
+                db.table("information").insert(data).execute()         
 
-            print("post 2")
-            return redirect("/create-qr")
+                session["logged_in"] = False
+                return redirect("/create-qr")
 
-        # Get pet data
-        data = db.table("information").select("*").eq("pet_id", int(arg_id)).execute().data
+            # Get pet data
+            data = db.table("information").select("*").eq("pet_id", int(arg_id)).execute().data
 
-        # Save pet id to cookies to create qr
-        session["pet_id"] = int(arg_id)
+            # Save pet id to cookies to create qr
+            session["pet_id"] = int(arg_id)
 
-        # Create qr code of pet
-        create_qr()
+            # Create qr code of pet
+            create_qr()
 
-        # Create readable dict of data
-        info = {}
-        for d in data:
-            cat_id = str(d["cat_id"])
-            info[cat_id] = d["info"]
+            # Create readable dict of data
+            info = {}
+            for d in data:
+                cat_id = str(d["cat_id"])
+                info[cat_id] = d["info"]
 
-        # Go to page
-        print("get 2")
-        print(info)
-        return render_template("edit_pet.html", stage=2, id=arg_id, fields=session["fields"], info=info)        
+            # Go to page
+            print("get 2")
+            print(info)
+            return render_template("edit_pet.html", stage=2, id=arg_id, fields=session["fields"], info=info)        
+        return redirect("/edit-pet")
 
 # Create pet
 @app.route("/create-pet", methods=["POST", "GET"])
