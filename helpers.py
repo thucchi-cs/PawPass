@@ -39,6 +39,7 @@ def _build_pet_url(pet_id):
 def generate_qr_bytes(pet_id):
     # Get url qr code is directed to
     pet_url = _build_pet_url(pet_id)
+    session["pet_link"] = pet_url
 
     # Create the qr code image
     qr = qrcode.QRCode(
@@ -49,7 +50,7 @@ def generate_qr_bytes(pet_id):
     )
     qr.add_data(pet_url)
     qr.make(fit=True)
-    img = qr.make_image(fill_color="darkblue", back_color="lightblue")
+    img = qr.make_image(fill_color="#2563eb")
 
     # Save qr code to buffer
     buf = BytesIO()
