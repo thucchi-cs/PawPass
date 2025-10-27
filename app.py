@@ -53,7 +53,7 @@ def display():
     # Get data of pet to display
     pet_id = request.args.get("id")
     data = db.table("information").select("*").eq("pet_id", int(pet_id)).order("cat_id").execute().data
-    print(session["fields"])
+
     # Go to display page
     return render_template("pet.html", id=pet_id, data=data, fields=session["fields"])
 

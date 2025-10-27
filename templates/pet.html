@@ -11,9 +11,9 @@
         <div class="mx-auto w-4/5 flex flex-col md:flex-row space-y-6 md:space-y-0">
             <div class="space-y-6 text-left mx-auto w-full md:w-[40%]">
                 {% for d in data %}
-                    {% if (fields[d['cat_id']|int]["name"] not in ["Pet Name", "Pet Type", "Owner Name", "Owner Contact Information"])%}
+                    {% if (fields[d['cat_id']|str]["name"] not in ["Pet Name", "Pet Type", "Owner Name", "Owner Contact Information"])%}
                         <div>
-                            <h2 class="font-semibold text-lg text-gray-800">{{fields[d['cat_id']|int]["name"]}}:</h2>
+                            <h2 class="font-semibold text-lg text-gray-800">{{fields[d['cat_id']|str]["name"]}}:</h2>
                             <p class="italic text-gray-600">{{d["info"]}}</p>
                         </div>
                     {% endif %}
@@ -22,9 +22,9 @@
 
             <div class="space-y-6 text-left mx-auto w-full md:w-[30%]">
                 {% for d in data %}
-                    {% if (fields[d['cat_id']|int]["name"] in ["Owner Name", "Owner Contact Information"])%}
+                    {% if (fields[d['cat_id']|str]["name"] in ["Owner Name", "Owner Contact Information"])%}
                         <div>
-                            <h2 class="font-semibold text-lg text-gray-800">{{fields[d['cat_id']|int]["name"]}}:</h2>
+                            <h2 class="font-semibold text-lg text-gray-800">{{fields[d['cat_id']|str]["name"]}}:</h2>
                             <p class="italic text-gray-600">{{d["info"]}}</p>
                         </div>
                     {% endif %}
