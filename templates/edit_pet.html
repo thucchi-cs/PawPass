@@ -1,37 +1,71 @@
 {% extends "layout.html" %}
 
 {% block body %}
-    sup
-    {{stage}}
-    {% if stage == 1 %}
+    <div class="flex flex-col py-[7vh] px-[10vw] md:px-0">
+        <!-- Title -->
+        <h1 class="text-6xl font-bold text-primary mb-6 text-center">Edit Pet</h1>
 
-        <form action="/edit-pet" method="post">
-            ID
-            <input type="text" name="id" autocomplete="off" autofocus>
-            Password
-            <input type="password" name="password" autocomplete="off">
-            <button>Next</button>
-        </form>
+        <!-- Horizontal line -->
+        <hr class="border-gray-300 w-48 mb-8 mx-auto border-2">
+        {% if stage == 1 %}
 
-    {% else %}
-        {{id}}
-        {{info}}
+            <!-- Cancel button -->
+            <form action="/" method="get" class="w-full max-w-lg mt-6">
+                <button class="text-gray-600 hover:text-gray-800 font-medium">&lt Cancel</button>
+            </form>
 
-        <form action={{ "/edit-pet?id=" ~ id }} method="post">
-            {% for id,value in fields.items() %}
-                
-                {% if value["name"] != "Password" %}
-                    <p>{{value["name"]}} {% if value['req'] %}*{% endif %}</p>
-                    {{id}}
-                    {% if value['descr'] %}
-                        <p>{{value['descr']}}</p>
+            <form action="/edit-pet" method="post" class="w-full md:w-[50vw] max-w-lg flex flex-col gap-6">
+                <div class="flex flex-col md:flex-row justify-between gap-6">
+                    <div class="flex flex-col flex-1 mt-[5vh]">
+                        <label class="font-semibold mb-1">Pet ID</label>
+                        <input type="text" name="id" autocomplete="off" autofocus class="border-b border-gray-300 focus:border-primary focus:outline-none py-1">
+                    </div>
+                    <div class="flex flex-col flex-1 mt-[5vh]">
+                        <label class="font-semibold mb-1">Password</label>
+                        <input type="password" name="password" autocomplete="off" class="border-b border-gray-300 focus:border-primary focus:outline-none py-1">
+                    </div>
+                </div>
+
+                <div class="flex justify-end mt-4">
+                    <button class="bg-primary text-white px-6 py-2 rounded-custom font-medium hover:bg-accent transition">
+                        Next
+                    </button>
+                </div>
+            </form>
+
+        {% else %}
+
+            <p class="text-center text-gray-500 italic">* indicates a required field</p>
+            
+            <!-- Cancel button -->
+            <form action="/" method="get" class="w-full max-w-lg mt-6">
+                <button class="text-gray-600 hover:text-gray-800 font-medium">&lt Cancel</button>
+            </form>
+
+            <!-- Form fields container -->
+            <form action={{ "/edit-pet?id=" ~ id }} method="post" class="w-full md:w-[50vw] max-w-lg flex flex-col gap-6">
+                {% for id,value in fields.items() %}
+                    {% if value["name"] != "Password" %}
+                        <div class="flex flex-col mt-[5vh]">
+                            <label class="font-semibold mb-1">{{value["name"]}} {% if value['req'] %}*{% endif %}</label>
+                            {% if value['descr'] %}
+                                <span class="text-gray-500 italic text-sm mb-1">{{value['descr']}}</span>
+                            {% endif %}
+                            <input autocomplete="off" name={{id}} {% if info[id] %} value="{{info[id]}}" {%endif%} class="border-b border-gray-300 focus:border-primary focus:outline-none py-1">
+                        </div>
                     {% endif %}
-                    <input name={{id}} {% if info[id] %} value="{{info[id]}}" {%endif%}>
-                {% endif %}
+                {% endfor %}
 
-            {% endfor %}
-            <button>Save</button>
-        </form>
+                <!-- Create button aligned right -->
+                <div class="flex justify-end mt-4">
+                    <button type="submit" 
+                            class="bg-primary text-white px-6 py-2 rounded-custom font-medium hover:bg-accent transition">
+                        Save
+                    </button>
+                </div>
+
+            </form>
+    </div>
 
     {% endif %}
 {% endblock %}
