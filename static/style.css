@@ -3,3 +3,9 @@
   margin: 0;
   padding: 0;
 }
+
+.bg-custom {
+  background-image: url("/static/bg.png");
+  background-size: auto;
+  background-repeat: repeat;
+}

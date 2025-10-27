@@ -2,21 +2,23 @@
 
 {% block body %}
 
+    <div class="flex flex-col items-center justify-center min-h-screen">
 
-    <h2>Your Pet QR Code</h2>
+        <h1 class="text-6xl font-bold text-primary mb-6 text-center">Your Pet Has Been Created!</h1>
 
-    {% if session.pet_id %}
-        <p>Scan the QR code to view your pet's page, or download it below.</p>
-        <div>
-            <img src="{{ url_for('qr_image') }}" alt="Pet QR code" style="max-width:300px; height:auto;" />
-        </div>
-        <p>
-            <a class="button" href="{{ url_for('qr_image') }}" download="qr_{{ session.pet_id }}.png">Download PNG</a>
-            <a class="button" href="/">Done</a>
-        </p>
-    {% else %}
-        <p>No QR code found. Please create a pet first.</p>
-        <a class="button" href="/create-pet">Create Pet</a>
-    {% endif %}
+        {% if session.pet_id %}
+            <p>Scan the QR code to view your pet's page, or download it below.</p>
+            <div>
+                <img src="{{ url_for('qr_image') }}" alt="Pet QR code" style="max-width:300px; height:auto;" />
+            </div>
+            <p>
+                <a class="button" href="{{ url_for('qr_image') }}" download="qr_{{ session.pet_id }}.png">Download PNG</a>
+                <a class="button" href="/">Done</a>
+            </p>
+        {% else %}
+            <p>No QR code found. Please create a pet first.</p>
+            <a class="button" href="/create-pet">Create Pet</a>
+        {% endif %}
+    </div>
 
 {% endblock %}

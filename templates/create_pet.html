@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block body %}
-    <div class="flex flex-col py-[7vh] px-[10vw] md:px-0">
+    <div class="flex flex-col py-[7vh] px-[10vw] md:px-12 bg-white">
         <!-- Title -->
         <h1 class="text-6xl font-bold text-primary mb-6 text-center">Create Pet</h1>
 
@@ -20,7 +20,7 @@
         <form action="/create-pet" method="post" class="w-full md:w-[50vw] max-w-lg flex flex-col gap-6">
             {% for id,value in fields.items() %}
                 <div class="flex flex-col mt-[5vh]">
-                    <label class="font-semibold mb-1">{{value["name"]}} {% if value['req'] %}*{% endif %}</label>
+                    <label class="font-semibold mb-1 text-lg">{{value["name"]}} {% if value['req'] %}*{% endif %}</label>
                     {% if value['descr'] %}
                         <span class="text-gray-500 italic text-sm mb-1">{{value['descr']}}</span>
                     {% endif %}
