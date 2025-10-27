@@ -26,7 +26,7 @@ def cap(s):
 def save_categories(categories):
     fields = {}
     for c in categories:
-        fields[int(c["id"])] = {"name": c["category"], "req": c["req"], "descr": c["descr"]}
+        fields[str(c["id"])] = {"name": c["category"], "req": c["req"], "descr": c["descr"]}
     session["fields"] = fields
 
 # Get url to pet display
