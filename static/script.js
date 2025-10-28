@@ -24,13 +24,12 @@ if ((window.location.pathname == "/create-pet") || ((window.location.pathname ==
     let addPet = document.querySelector("#addPet")
     addPet.querySelector("#btn").addEventListener("click", function() {
         // Get inputs
-        let petName = addPet.querySelector("#id1").value;
-        let petType = addPet.querySelector("#id2").value;
-        let favoriteFood = addPet.querySelector("#id5").value;
-        let OwnerName = addPet.querySelector("#id7").value;
-        let OwnerContact = addPet.querySelector("#id8").value;
-        let petAge = addPet.querySelector("#id4").value;
-        let password = addPet.querySelector("#id11");
+        let petName = addPet.querySelector("#id0").value;
+        let petType = addPet.querySelector("#id1").value;
+        let favoriteFood = addPet.querySelector("#id4").value;
+        let OwnerName = addPet.querySelector("#id6").value;
+        let OwnerContact = addPet.querySelector("#id7").value;
+        let password = addPet.querySelector("#id9");
         password = password ? password.value : "password!";
 
         // Flash error if not all fields are filled out
